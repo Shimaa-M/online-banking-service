@@ -1,0 +1,44 @@
+version: "3"
+
+services:
+  online-banking-app:
+    env_file:
+      - ./.env.development
+    build: 
+      context: .
+      target: development
+    volumes:
+      - ./src:/app/src
+    depends_on:
+      - postgres
+    ports:
+      - 5005:5005 
+
+  postgres:
+    image: postgres:12
+    env_file: ./.env.development
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'  
+  nginx:
+    image: nginx:latest
+    volumes:
+     - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+     - "80:80"
+    depends_on: 
+     - online-banking-app
+
+ 
+  adminer:
+   image: adminer
+   restart: always
+   ports:
+    - 8080:8080
+volumes:
+  postgres-data:
+

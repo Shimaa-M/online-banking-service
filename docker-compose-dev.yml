@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  online-banking-app:
+    env_file:
+     ./.env.development
+    build: 
+     context: .
+     target: development
+    environment:
+     - NODE_ENV=development
+    volumes:
+     - ./src:/app/src:ro
+   
